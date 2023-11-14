@@ -95,6 +95,7 @@ function LandingPage() {
               <Card.Body>
                 <Card.Title>Shikimori</Card.Title>
                 <Card.Text>Sample Description</Card.Text>
+                <Card.Text>Date</Card.Text>
                 <Rating name="no-value" value={null} />
               </Card.Body>
             </Card>
