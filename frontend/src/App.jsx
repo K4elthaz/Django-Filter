@@ -4,6 +4,7 @@ import "./index.css";
 
 import LoginPage from "./components/Login";
 import RegisterPage from "./components/Register";
+import LandingPage from "./components/MainPage";
 
 function App() {
   return (
@@ -11,13 +12,15 @@ function App() {
       style={{
         height: "100%",
         minHeight: "100vh",
-        backgroundColor: "#1a1f2b",
+        backgroundColor: "#F5F5F5",
+        // fontFamily: "Colon Mono, monospace",
       }}
     >
       <Router>
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/Register" element={<RegisterPage />} />
+          <Route path="/Home" element={<LandingPage />} />
         </Routes>
       </Router>
     </main>
