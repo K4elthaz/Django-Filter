@@ -1,5 +1,8 @@
 from django.contrib import admin
-from .models import Article, Comment
+from .models import Article, Category
 
-admin.site.register(Article)
-# admin.site.register(Comment)
+class ArticleAdmin(admin.ModelAdmin):
+    filter_horizontal = ('categories',)
+
+admin.site.register(Article, ArticleAdmin)
+admin.site.register(Category)
