@@ -1,16 +1,15 @@
 from rest_framework import serializers
-from .models import Article, Comment
+from .models import Article, Category
 from django.contrib.auth.models import User
 
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
         fields = '__all__'  # You can specify specific fields if needed
-
-class CommentSerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Comment
-        fields = '__all__'  # You can specify specific fields if needed
+        model = Category
+        fields = '__all__'
         
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)

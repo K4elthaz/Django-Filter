@@ -8,16 +8,16 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import generics, viewsets
-from .models import Article, Comment
-from .serializers import ArticleSerializer, CommentSerializer, UserSerializer
+from .models import Article, Category
+from .serializers import ArticleSerializer, CategorySerializer, UserSerializer
 
 class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
-class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
     
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = User.objects.all()
