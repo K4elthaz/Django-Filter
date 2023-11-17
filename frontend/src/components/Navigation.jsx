@@ -12,7 +12,8 @@ function Nav() {
   const [showPopover, setShowPopover] = useState(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("name");
+    localStorage.clear();
+
     window.location.href = "/";
   };
 

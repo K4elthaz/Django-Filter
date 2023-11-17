@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import "../index.css";
+import { useNavigate, Link } from "react-router-dom";
 import Nav from "./Navigation";
-import { Container, Form, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Form, Row, Col, Card } from "react-bootstrap";
 import Chip from "@mui/material-next/Chip";
 import Paper from "@mui/material/Paper";
 import ArticleService from "../API/Article";
-import { Link } from "react-router-dom";
 import CategoryService from "../API/Category";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
@@ -17,6 +17,8 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 function LandingPage() {
+  const navigate = useNavigate();
+  const isAuthenticated = localStorage.getItem("access_token") !== null;
   const [articles, setArticles] = useState([]);
   const [category, setCategory] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -52,34 +54,41 @@ function LandingPage() {
   };
 
   useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const response = await ArticleService.getArticles();
-        const articlesWithDate = response.map((article) => ({
-          ...article,
-          date: new Date(article.date),
-        }));
-        setArticles(response);
-      } catch (error) {
-        console.error("Error fetching articles:", error);
-      }
-    };
+    console.log("Checking authentication...");
+    const isAuthenticated = localStorage.getItem("access_token") !== null;
+    console.log("Is authenticated:", isAuthenticated);
 
-    fetchArticles();
-  }, []);
+    if (!isAuthenticated) {
+      console.log("User is not authenticated. Redirecting to login.");
 
-  useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const response = await CategoryService.getCategory();
-        setCategory(response);
-      } catch (error) {
-        console.error("Error fetching articles:", error);
-      }
-    };
+      navigate("/");
+    } else {
+      const fetchArticles = async () => {
+        try {
+          const response = await ArticleService.getArticles();
+          const articlesWithDate = response.map((article) => ({
+            ...article,
+            date: new Date(article.date),
+          }));
+          setArticles(response);
+        } catch (error) {
+          console.error("Error fetching articles:", error);
+        }
+      };
 
-    fetchCategory();
-  }, []);
+      const fetchCategory = async () => {
+        try {
+          const response = await CategoryService.getCategory();
+          setCategory(response);
+        } catch (error) {
+          console.error("Error fetching articles:", error);
+        }
+      };
+
+      fetchArticles();
+      fetchCategory();
+    }
+  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
     const topFiveArticles = articles
@@ -344,7 +353,7 @@ function LandingPage() {
                         className="text-secondary"
                         style={{ fontSize: "12px" }}
                       >
-                        Category: {article.category}
+                        Category: {article.category.join(", ")}
                       </Card.Text>
                     </Card.Body>
                   </Card>

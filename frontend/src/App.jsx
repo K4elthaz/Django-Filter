@@ -1,10 +1,16 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import "./index.css";
 
 import LoginPage from "./components/Login";
 import RegisterPage from "./components/Register";
 import LandingPage from "./components/MainPage";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
@@ -21,7 +27,10 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/Register" element={<RegisterPage />} />
-          <Route path="/Home" element={<LandingPage />} />
+          <Route
+            path="/Home/*"
+            element={<PrivateRoute element={LandingPage} />}
+          />
         </Routes>
       </Router>
     </main>
