@@ -12,6 +12,9 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import SortIcon from "@mui/icons-material/Sort";
 import Tooltip from "@mui/material/Tooltip";
 import Pagination from "./Pagination";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 function LandingPage() {
   const [articles, setArticles] = useState([]);
@@ -22,8 +25,9 @@ function LandingPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestedSearchTerms, setSuggestedSearchTerms] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const cardsPerPage = 12;
+  const [isDateSort, setIsDateSort] = useState(false);
 
+  const cardsPerPage = 12;
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
   const filteredArticles = articles
@@ -35,7 +39,8 @@ function LandingPage() {
         article.title.toLowerCase().includes(searchQuery.toLowerCase());
       return categoryFilter && searchFilter;
     })
-    .sort((a, b) => (isSort ? b.views - a.views : a.views - b.views));
+    .sort((a, b) => (isSort ? b.views - a.views : a.views - b.views))
+    .sort((a, b) => (isDateSort ? new Date(b.date) - new Date(a.date) : 0));
 
   const currentCards = filteredArticles.slice(
     indexOfFirstCard,
@@ -50,6 +55,10 @@ function LandingPage() {
     const fetchArticles = async () => {
       try {
         const response = await ArticleService.getArticles();
+        const articlesWithDate = response.map((article) => ({
+          ...article,
+          date: new Date(article.date),
+        }));
         setArticles(response);
       } catch (error) {
         console.error("Error fetching articles:", error);
@@ -93,6 +102,11 @@ function LandingPage() {
 
   const handleSort = () => {
     setIsSort(!isSort);
+    console.log("Clicked");
+  };
+
+  const handleDateSort = () => {
+    setIsDateSort(!isDateSort);
     console.log("Clicked");
   };
 
@@ -152,11 +166,11 @@ function LandingPage() {
             </Col>
           </Row>
           <Row>
-            <Col className="d-flex align-items-center mt-5">
+            <Col className="d-flex justify-content-center align-items-center mt-5">
               <div
                 className="text-center p-1 me-2"
                 style={{
-                  width: 200,
+                  width: 300,
                   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                   backgroundColor: "white",
                   borderRadius: "7px",
@@ -214,7 +228,7 @@ function LandingPage() {
               </div>
               <Tooltip title="Filter by Views" arrow>
                 <Paper
-                  className="p-1 text-center"
+                  className="p-1 text-center me-2"
                   onClick={handleSort}
                   style={{
                     width: 50,
@@ -233,6 +247,27 @@ function LandingPage() {
                   />
                 </Paper>
               </Tooltip>
+              <Tooltip title="Filter by Date" arrow>
+                <Paper
+                  className="p-1 text-center"
+                  onClick={handleDateSort}
+                  style={{
+                    width: 50,
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                    backgroundColor: isDateSort ? "#0096FF" : "white",
+                    borderRadius: "7px",
+                    position: "relative",
+                    cursor: "pointer",
+                    transition: "background-color 0.3s ease",
+                  }}
+                >
+                  <CalendarMonthIcon
+                    style={{
+                      color: isDateSort ? "white" : "black",
+                    }}
+                  />
+                </Paper>
+              </Tooltip>
             </Col>
           </Row>
 
@@ -241,6 +276,7 @@ function LandingPage() {
             style={{
               display: "flex",
               flexWrap: "wrap",
+              justifyContent: "center",
             }}
           >
             {currentCards.map((article) => (
@@ -256,6 +292,7 @@ function LandingPage() {
                       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                       marginRight: "10px",
                       marginBottom: "10px",
+                      height: "32rem",
                     }}
                   >
                     {article.thumbnail && (
@@ -267,31 +304,55 @@ function LandingPage() {
                       />
                     )}
                     <Card.Body>
-                      <Card.Title>{article.title}</Card.Title>
-                      <Card.Text>{article.description}</Card.Text>
+                      <div
+                        className="mb-2 text-secondary"
+                        style={{ fontSize: "12px" }}
+                      >
+                        <Card.Text className="d-flex justify-content-between">
+                          <small>
+                            {new Date(article.date).toLocaleString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })}
+                          </small>
+                          <small>
+                            <VisibilityIcon
+                              className="me-2"
+                              sx={{ fontSize: 16 }}
+                            />
+                            {article.views}
+                          </small>
+                        </Card.Text>
+                      </div>
+
+                      <Card.Title className="mb-4">{article.title}</Card.Title>
                       <Card.Text>
-                        <p>
-                          <b>Views:</b> <span>{article.views}</span>
-                        </p>
+                        <figcaption className="blockquote-footer">
+                          {article.description}
+                        </figcaption>
                       </Card.Text>
-                      <Card.Text>
-                        {new Date(article.date).toLocaleString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                          hour: "numeric",
-                          minute: "numeric",
-                        })}
+
+                      <Card.Text className="text-secondary">
+                        <Chip
+                          icon={<AccountCircleIcon />}
+                          variant="outlined"
+                          label={`${article.username}`}
+                        />
                       </Card.Text>
-                      <Card.Text>{article.username}</Card.Text>
-                      <Card.Text>{article.category}</Card.Text>
+                      <Card.Text
+                        className="text-secondary"
+                        style={{ fontSize: "12px" }}
+                      >
+                        Category: {article.category}
+                      </Card.Text>
                     </Card.Body>
                   </Card>
                 </Tooltip>
               </Link>
             ))}
           </div>
-          <div className="mt-3">
+          <div className="mt-3 d-flex justify-content-center">
             <Pagination
               cardsPerPage={cardsPerPage}
               totalCards={articles.length}
