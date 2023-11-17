@@ -349,13 +349,13 @@ function LandingPage() {
                           label={`${article.username}`}
                         />
                       </Card.Text>
-                      <Card.Text
-                        className="text-secondary"
-                        style={{ fontSize: "12px" }}
-                      >
-                        Category: {article.category.join(", ")}
-                      </Card.Text>
                     </Card.Body>
+                    <Card.Footer
+                      className="text-secondary"
+                      style={{ fontSize: "12px" }}
+                    >
+                      Category: {article.category.join(", ")}
+                    </Card.Footer>
                   </Card>
                 </Tooltip>
               </Link>
