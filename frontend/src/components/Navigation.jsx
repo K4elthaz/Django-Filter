@@ -1,10 +1,33 @@
-import React from "react";
-import "../index.css";
-import { Container, Navbar } from "react-bootstrap";
+import React, { useState } from "react";
+import {
+  Container,
+  Navbar,
+  OverlayTrigger,
+  Popover,
+  Button,
+} from "react-bootstrap";
 
 function Nav() {
-  // Retrieve the username from localStorage
   const username = localStorage.getItem("name");
+  const [showPopover, setShowPopover] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("name");
+    window.location.href = "/";
+  };
+
+  const popover = (
+    <Popover id="popover-basic" style={{ cursor: "pointer" }}>
+      <Popover.Header as="h3">User Information</Popover.Header>
+      <Popover.Body>
+        {username && (
+          <Button variant="danger" onClick={handleLogout}>
+            Logout
+          </Button>
+        )}
+      </Popover.Body>
+    </Popover>
+  );
 
   return (
     <Navbar sticky="top" bg="dark" data-bs-theme="dark">
@@ -12,9 +35,17 @@ function Nav() {
         <Navbar.Brand href="/">Filtering</Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
-          <Navbar.Text>
-            {username ? `Signed in as: ${username}` : "Not signed in"}
-          </Navbar.Text>
+          <OverlayTrigger
+            trigger="click"
+            placement="bottom"
+            show={showPopover}
+            onToggle={(show) => setShowPopover(show)}
+            overlay={popover}
+          >
+            <Navbar.Text style={{ cursor: "pointer" }}>
+              {username ? `Signed in as: ${username}` : "Not signed in"}
+            </Navbar.Text>
+          </OverlayTrigger>
         </Navbar.Collapse>
       </Container>
     </Navbar>
