@@ -3,9 +3,18 @@ from .models import Article, Category
 from django.contrib.auth.models import User
 
 class ArticleSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
+    category = serializers.SerializerMethodField()
+
     class Meta:
         model = Article
-        fields = '__all__'  # You can specify specific fields if needed
+        fields = '__all__'
+
+    def get_username(self, obj):
+        return obj.user.username
+    
+    def get_category(self, obj):
+        return [category.name for category in obj.categories.all()]
         
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,6 +1,8 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import ArticleViewSet, CategoryViewSet,UserLoginView,UserLogoutView,UserListCreateView,UserRetrieveUpdateView,protected_view
+from django.conf import settings
+from django.conf.urls.static import static
 
 router = DefaultRouter()
 router.register(r'articles', ArticleViewSet)
@@ -15,3 +17,6 @@ urlpatterns = [
     path('protected/', protected_view, name='protected-view'),
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
