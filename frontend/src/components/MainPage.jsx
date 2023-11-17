@@ -249,43 +249,45 @@ function LandingPage() {
                 key={article.id}
                 style={{ textDecoration: "none" }}
               >
-                <Card
-                  style={{
-                    width: "18rem",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                    marginRight: "10px",
-                    marginBottom: "10px",
-                  }}
-                >
-                  {article.thumbnail && (
-                    <Card.Img
-                      variant="top"
-                      src={article.thumbnail}
-                      alt={article.title}
-                      style={{ height: "200px", objectFit: "cover" }}
-                    />
-                  )}
-                  <Card.Body>
-                    <Card.Title>{article.title}</Card.Title>
-                    <Card.Text>{article.description}</Card.Text>
-                    <Card.Text>
-                      <p>
-                        <b>Views:</b> <span>{article.views}</span>
-                      </p>
-                    </Card.Text>
-                    <Card.Text>
-                      {new Date(article.date).toLocaleString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        hour: "numeric",
-                        minute: "numeric",
-                      })}
-                    </Card.Text>
-                    <Card.Text>{article.username}</Card.Text>
-                    <Card.Text>{article.category}</Card.Text>
-                  </Card.Body>
-                </Card>
+                <Tooltip arrow followCursor title={`${article.link}`}>
+                  <Card
+                    style={{
+                      width: "18rem",
+                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                      marginRight: "10px",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    {article.thumbnail && (
+                      <Card.Img
+                        variant="top"
+                        src={article.thumbnail}
+                        alt={article.title}
+                        style={{ height: "200px", objectFit: "cover" }}
+                      />
+                    )}
+                    <Card.Body>
+                      <Card.Title>{article.title}</Card.Title>
+                      <Card.Text>{article.description}</Card.Text>
+                      <Card.Text>
+                        <p>
+                          <b>Views:</b> <span>{article.views}</span>
+                        </p>
+                      </Card.Text>
+                      <Card.Text>
+                        {new Date(article.date).toLocaleString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "numeric",
+                        })}
+                      </Card.Text>
+                      <Card.Text>{article.username}</Card.Text>
+                      <Card.Text>{article.category}</Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Tooltip>
               </Link>
             ))}
           </div>
