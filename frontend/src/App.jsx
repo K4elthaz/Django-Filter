@@ -13,7 +13,7 @@ function App() {
         height: "100%",
         minHeight: "100vh",
         backgroundColor: "#F5F5F5",
-        // fontFamily: "Colon Mono, monospace",
+        fontFamily: "Colon Mono, monospace",
       }}
     >
       <Router>
