@@ -95,7 +95,7 @@ function LandingPage() {
           <Form onSubmit={handleSearchSubmit}>
             <Form.Control
               size="lg"
-              type="text"
+              type="search"
               placeholder="Search..."
               style={{
                 width: "100%",
