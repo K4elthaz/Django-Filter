@@ -9,7 +9,7 @@ function Nav() {
   return (
     <Navbar sticky="top" bg="dark" data-bs-theme="dark">
       <Container>
-        <Navbar.Brand href="#home">Filtering</Navbar.Brand>
+        <Navbar.Brand href="/">Filtering</Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>

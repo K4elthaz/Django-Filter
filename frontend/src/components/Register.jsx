@@ -39,7 +39,7 @@ function RegisterPage() {
     <div className="centered">
       <Card
         className="d-flex justify-content-center align-items-center"
-        style={{ width: "20rem" }}
+        style={{ width: "20rem", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
       >
         <Card.Body>
           <Form className="d-flex flex-column" onSubmit={handleRegister}>

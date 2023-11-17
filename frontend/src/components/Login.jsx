@@ -15,28 +15,30 @@ function LoginPage() {
 
     try {
       const accessToken = await ApiService.login(username, password);
-      const user_id = localStorage.getItem('user_id');
-      const name = localStorage.getItem('name');
-      localStorage.setItem('access_token', accessToken);
-      localStorage.setItem('user_id', user_id);
-      localStorage.setItem('name', username);
+      const user_id = localStorage.getItem("user_id");
+      const name = localStorage.getItem("name");
+      localStorage.setItem("access_token", accessToken);
+      localStorage.setItem("user_id", user_id);
+      localStorage.setItem("name", username);
 
-      console.log('Logged in successfully with access token:', accessToken);
-      console.log('User ID:', user_id);
-      console.log('Name:', username);
+      console.log("Logged in successfully with access token:", accessToken);
+      console.log("User ID:", user_id);
+      console.log("Name:", username);
 
       // Redirect to the "/home" route
-      navigate('/home');
+      navigate("/home");
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        setErrorMessage('Invalid username or password.');
+        setErrorMessage("Invalid username or password.");
       } else if (error.response && error.response.status === 400) {
-        setErrorMessage('Please input the required fields.');
+        setErrorMessage("Please input the required fields.");
       } else {
-        setErrorMessage('An error occurred while logging in. Please try again later.');
+        setErrorMessage(
+          "An error occurred while logging in. Please try again later."
+        );
       }
 
-      console.error('Login error:', error);
+      console.error("Login error:", error);
     }
   };
 
@@ -44,7 +46,7 @@ function LoginPage() {
     <div className="centered">
       <Card
         className="d-flex justify-content-center align-items-center"
-        style={{ width: "20rem" }}
+        style={{ width: "20rem", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
       >
         <Card.Body>
           <Form className="d-flex flex-column" onSubmit={handleLogin}>

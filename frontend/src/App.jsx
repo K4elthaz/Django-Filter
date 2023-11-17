@@ -10,7 +10,8 @@ function App() {
   return (
     <main
       style={{
-        height: "100%",
+        display: "flex",
+        flexDirection: "column",
         minHeight: "100vh",
         backgroundColor: "#F5F5F5",
         fontFamily: "Colon Mono, monospace",
