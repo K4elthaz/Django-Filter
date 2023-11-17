@@ -19,6 +19,7 @@ function LandingPage() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [isSort, setIsSort] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [suggestedSearchTerms, setSuggestedSearchTerms] = useState([]);
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -46,6 +47,16 @@ function LandingPage() {
     fetchCategory();
   }, []);
 
+  useEffect(() => {
+    const topFiveArticles = articles
+      .sort((a, b) => b.views - a.views)
+      .slice(0, 5);
+
+    const terms = topFiveArticles.map((article) => article.title);
+
+    setSuggestedSearchTerms(terms);
+  }, [articles]);
+
   const handleDropdownToggle = () => {
     setIsOpen(!isOpen);
   };
@@ -60,32 +71,59 @@ function LandingPage() {
     console.log("Clicked");
   };
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    setSelectedCategory(null);
+  };
+
+  const handleChipClick = (term) => {
+    setSearchQuery(term);
+    setSelectedCategory(null);
+  };
+
+  const handleChipDelete = (index) => {
+    const updatedTerms = [...suggestedSearchTerms];
+    updatedTerms.splice(index, 1);
+    setSuggestedSearchTerms(updatedTerms);
+  };
+
   return (
     <div>
       <Nav />
       <Container>
         <div className=" my-5 py-4">
-          <Form.Control
-            size="lg"
-            type="text"
-            placeholder="Search..."
-            style={{
-              width: "100%",
-              maxWidth: "300px",
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            }}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <Row className="mt-3">
+          <Form onSubmit={handleSearchSubmit}>
+            <Form.Control
+              size="lg"
+              type="text"
+              placeholder="Search..."
+              style={{
+                width: "100%",
+                maxWidth: "300px",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              }}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </Form>
+          <Row className="mt-3 ">
             <Col>
-              <Chip
-                style={{ marginTop: "5px", marginRight: "5px" }}
-                color="secondary"
-                size="small"
-                variant="elevated"
-                label="category"
-              />
+              {suggestedSearchTerms.map((term, index) => (
+                <Chip
+                  className="me-2"
+                  key={index}
+                  style={{
+                    marginTop: "5px",
+                    cursor: "pointer",
+                  }}
+                  color="secondary"
+                  size="small"
+                  variant="elevated"
+                  label={term}
+                  onClick={() => handleChipClick(term)}
+                  onDelete={() => handleChipDelete(index)}
+                />
+              ))}
             </Col>
           </Row>
           <Row>
