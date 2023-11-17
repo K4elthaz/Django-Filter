@@ -317,7 +317,7 @@ function LandingPage() {
                         className="mb-2 text-secondary"
                         style={{ fontSize: "12px" }}
                       >
-                        <Card.Text className="d-flex justify-content-between">
+                        <Card.Text className="d-flex justify-content-between align-items-center">
                           <small>
                             {new Date(article.date).toLocaleString("en-US", {
                               year: "numeric",
@@ -325,10 +325,10 @@ function LandingPage() {
                               day: "numeric",
                             })}
                           </small>
-                          <small>
+                          <small className="d-flex align-items-center">
                             <VisibilityIcon
                               className="me-2"
-                              sx={{ fontSize: 16 }}
+                              sx={{ fontSize: 12 }}
                             />
                             {article.views}
                           </small>
