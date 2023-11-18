@@ -30,7 +30,7 @@ function LoginPage() {
       localStorage.setItem("user_id", user_id);
       localStorage.setItem("name", name);
 
-      toast.success("Logged in successfully with access token:", accessToken);
+      toast.success(`Welcome ${name}!`);
       console.log("User ID:", user_id);
       console.log("Name:", name);
 
