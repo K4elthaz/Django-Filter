@@ -16,7 +16,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { toast } from "react-toastify";
-
+import Toastify from "./Toastify";
 
 const CardPlaceholder = () => {
   return (
@@ -100,7 +100,7 @@ function LandingPage() {
             date: new Date(article.date),
           }));
           setArticles(response);
-          // toast.success(`Welcome ${username}!`);
+          toast.success(`Welcome ${username}!`);
         } catch (error) {
           console.error("Error fetching articles:", error);
         }
@@ -167,7 +167,9 @@ function LandingPage() {
 
   return (
     <div>
+      <Toastify />
       <Nav />
+
       <Container>
         <div className=" my-5 py-4">
           <Form onSubmit={handleSearchSubmit}>

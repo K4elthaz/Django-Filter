@@ -6,18 +6,15 @@ import {
   Popover,
   Button,
 } from "react-bootstrap";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 function Nav() {
   const username = localStorage.getItem("name");
   const [showPopover, setShowPopover] = useState(false);
-  const navigate = useNavigate();
 
   const handleLogout = () => {
-    toast.success(`Thank you ${username} has been logged out.`);
     localStorage.clear();
-    navigate("/");
+
+    window.location.href = "/";
   };
 
   const popover = (

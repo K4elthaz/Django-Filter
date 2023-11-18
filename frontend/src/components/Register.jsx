@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { Card, Form, Button } from "react-bootstrap";
 import "../index.css";
-import { Link,useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ApiService from "../API/userAPI";
-import { toast } from "react-toastify";
+
 function RegisterPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -26,9 +25,9 @@ function RegisterPage() {
 
       // Registration successful, you can redirect the user to the login page or any other page
       console.log("Registration successful");
-      toast.success("Registration successful. Please login.");
+
       // Redirect to the login page
-      navigate("/home"); // You can use a more structured way to navigate
+      window.location.href = "/"; // You can use a more structured way to navigate
     } catch (error) {
       // Handle registration error
       setErrorMessage("Registration failed. Please try again.");

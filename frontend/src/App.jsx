@@ -6,7 +6,6 @@ import {
   Navigate,
 } from "react-router-dom";
 import "./index.css";
-import Toastify from "./components/Toastify";
 
 import LoginPage from "./components/Login";
 import RegisterPage from "./components/Register";
@@ -25,7 +24,6 @@ function App() {
       }}
     >
       <Router>
-      <Toastify />
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/Register" element={<RegisterPage />} />
