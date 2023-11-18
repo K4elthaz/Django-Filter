@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import api_view, authentication_classes, permission_classes, action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -14,6 +14,14 @@ from .serializers import ArticleSerializer, CategorySerializer, UserSerializer
 class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
+
+    @action(detail=True, methods=['put'])
+    def increment_views(self, request, pk=None):
+        article = self.get_object()
+        article.views += 1
+        article.save()
+        serializer = self.get_serializer(article)
+        return Response(serializer.data)
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()

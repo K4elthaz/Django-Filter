@@ -15,8 +15,6 @@ import Pagination from "./Pagination";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { toast } from "react-toastify";
-import Toastify from "./Toastify";
 
 const CardPlaceholder = () => {
   return (
@@ -46,8 +44,6 @@ const CardPlaceholder = () => {
 function LandingPage() {
   const navigate = useNavigate();
   const isAuthenticated = localStorage.getItem("access_token") !== null;
-  const username = localStorage.getItem("name");
-  const [isComponentMounted, setIsComponentMounted] = useState(false);
   const [articles, setArticles] = useState([]);
   const [category, setCategory] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -57,6 +53,7 @@ function LandingPage() {
   const [suggestedSearchTerms, setSuggestedSearchTerms] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isDateSort, setIsDateSort] = useState(false);
+  const [viewedArticles, setViewedArticles] = useState([]);
 
   const cardsPerPage = 12;
   const indexOfLastCard = currentPage * cardsPerPage;
@@ -99,8 +96,7 @@ function LandingPage() {
             ...article,
             date: new Date(article.date),
           }));
-          setArticles(response);
-          toast.success(`Welcome ${username}!`);
+          setArticles(articlesWithDate);
         } catch (error) {
           console.error("Error fetching articles:", error);
         }
@@ -129,6 +125,27 @@ function LandingPage() {
 
     setSuggestedSearchTerms(terms);
   }, [articles]);
+
+  const handleCardClick = (articleId) => {
+    if (!viewedArticles.includes(articleId)) {
+      setViewedArticles([...viewedArticles, articleId]);
+
+      ArticleService.incrementViews(articleId)
+        .then((response) => {
+          const updatedArticles = articles.map((article) =>
+            article.id === articleId
+              ? { ...article, views: article.views + 1 }
+              : article
+          );
+          setArticles(updatedArticles);
+
+          console.log(`View count for article ${articleId} incremented.`);
+        })
+        .catch((error) => {
+          console.error("Error incrementing view count:", error);
+        });
+    }
+  };
 
   const handleDropdownToggle = () => {
     setIsOpen(!isOpen);
@@ -167,7 +184,6 @@ function LandingPage() {
 
   return (
     <div>
-      <Toastify />
       <Nav />
 
       <Container>
@@ -326,6 +342,7 @@ function LandingPage() {
                     to={`${article.link}`}
                     key={article.id}
                     style={{ textDecoration: "none" }}
+                    target="_blank"
                   >
                     <Tooltip arrow followCursor title={`${article.link}`}>
                       <Card
@@ -336,6 +353,7 @@ function LandingPage() {
                           marginBottom: "10px",
                           height: "32rem",
                         }}
+                        onClick={() => handleCardClick(article.id)}
                       >
                         {article.thumbnail && (
                           <Card.Img
@@ -400,8 +418,7 @@ function LandingPage() {
                     </Tooltip>
                   </Link>
                 ))
-              : // Render placeholders if there are no articles
-                Array.from({ length: cardsPerPage }).map((_, index) => (
+              : Array.from({ length: cardsPerPage }).map((_, index) => (
                   <CardPlaceholder key={index} />
                 ))}
           </div>

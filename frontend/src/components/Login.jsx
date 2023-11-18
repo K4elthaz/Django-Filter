@@ -30,7 +30,7 @@ function LoginPage() {
       localStorage.setItem("user_id", user_id);
       localStorage.setItem("name", name);
 
-      toast.success("Logged in successfully with access token:", accessToken);
+      toast.success(`Welcome ${name}!`);
       console.log("User ID:", user_id);
       console.log("Name:", name);
 
@@ -52,8 +52,6 @@ function LoginPage() {
 
   return (
     <div className="centered">
-      <Toastify />
-
       <Card
         className="d-flex justify-content-center align-items-center"
         style={{ width: "20rem", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}

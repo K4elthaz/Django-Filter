@@ -1,36 +1,35 @@
 import React, { useState } from "react";
 import { Card, Form, Button } from "react-bootstrap";
 import "../index.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ApiService from "../API/userAPI";
+import { toast } from "react-toastify";
 
 function RegisterPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
     // Check if passwords match
     if (password !== confirmPassword) {
-      setErrorMessage("Passwords do not match.");
+      toast.error("Passwords do not match.");
       return;
     }
 
     try {
-      // Call your registration API endpoint here using ApiService
       await ApiService.register(username, password);
 
-      // Registration successful, you can redirect the user to the login page or any other page
       console.log("Registration successful");
+      toast.success(`Registration successful. Welcome, ${username}!`);
 
-      // Redirect to the login page
-      window.location.href = "/"; // You can use a more structured way to navigate
+      navigate("/home");
     } catch (error) {
-      // Handle registration error
-      setErrorMessage("Registration failed. Please try again.");
+      toast.error("Registration failed. Please try again.");
       console.error("Registration error:", error);
     }
   };

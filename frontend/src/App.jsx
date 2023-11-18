@@ -11,6 +11,7 @@ import LoginPage from "./components/Login";
 import RegisterPage from "./components/Register";
 import LandingPage from "./components/MainPage";
 import PrivateRoute from "./components/PrivateRoute";
+import Toastify from "./components/Toastify";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
       }}
     >
       <Router>
+        <Toastify />
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/Register" element={<RegisterPage />} />
