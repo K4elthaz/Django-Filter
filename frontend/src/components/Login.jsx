@@ -4,14 +4,23 @@ import { Link } from "react-router-dom";
 import ApiService from "../API/userAPI";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
+import { toast } from "react-toastify";
+import Toastify from "./Toastify";
+
 function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    if (!username || !password) {
+      toast.error("Please enter both username and password.");
+      return;
+    }
 
     try {
       const accessToken = await ApiService.login(username, password);
@@ -19,21 +28,20 @@ function LoginPage() {
       const name = localStorage.getItem("name");
       localStorage.setItem("access_token", accessToken);
       localStorage.setItem("user_id", user_id);
-      localStorage.setItem("name", username);
+      localStorage.setItem("name", name);
 
-      console.log("Logged in successfully with access token:", accessToken);
+      toast.success("Logged in successfully with access token:", accessToken);
       console.log("User ID:", user_id);
-      console.log("Name:", username);
+      console.log("Name:", name);
 
-      // Redirect to the "/home" route
       navigate("/home");
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        setErrorMessage("Invalid username or password.");
+        toast.error("Invalid username or password.");
       } else if (error.response && error.response.status === 400) {
-        setErrorMessage("Please input the required fields.");
+        toast.error("Please input the required fields.");
       } else {
-        setErrorMessage(
+        toast.error(
           "An error occurred while logging in. Please try again later."
         );
       }
@@ -44,6 +52,8 @@ function LoginPage() {
 
   return (
     <div className="centered">
+      <Toastify />
+
       <Card
         className="d-flex justify-content-center align-items-center"
         style={{ width: "20rem", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
@@ -79,9 +89,10 @@ function LoginPage() {
             </p>
           </div>
           {errorMessage && (
-            <div className="text-danger mt-3">
-              <p>{errorMessage}</p>
-            </div>
+            <div className="text-danger mt-3">{errorMessage}</div>
+          )}
+          {successMessage && (
+            <div className="text-success mt-3">{successMessage}</div>
           )}
         </Card.Body>
       </Card>

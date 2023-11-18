@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "../index.css";
 import { useNavigate, Link } from "react-router-dom";
 import Nav from "./Navigation";
-import { Container, Form, Row, Col, Card } from "react-bootstrap";
+import { Container, Form, Row, Col, Card, Placeholder } from "react-bootstrap";
 import Chip from "@mui/material-next/Chip";
 import Paper from "@mui/material/Paper";
 import ArticleService from "../API/Article";
@@ -15,10 +15,39 @@ import Pagination from "./Pagination";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { toast } from "react-toastify";
+import Toastify from "./Toastify";
+
+const CardPlaceholder = () => {
+  return (
+    <Card
+      style={{
+        width: "18rem",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        marginRight: "10px",
+        marginBottom: "10px",
+        height: "32rem",
+      }}
+    >
+      <Card.Img variant="top" style={{ height: "200px", objectFit: "cover" }} />
+      <Card.Body>
+        <Placeholder as={Card.Title} animation="glow">
+          <Placeholder xs={6} />
+        </Placeholder>
+        <Placeholder as={Card.Text} animation="glow">
+          <Placeholder xs={7} /> <Placeholder xs={4} /> <Placeholder xs={4} />{" "}
+          <Placeholder xs={6} /> <Placeholder xs={8} />
+        </Placeholder>
+      </Card.Body>
+    </Card>
+  );
+};
 
 function LandingPage() {
   const navigate = useNavigate();
   const isAuthenticated = localStorage.getItem("access_token") !== null;
+  const username = localStorage.getItem("name");
+  const [isComponentMounted, setIsComponentMounted] = useState(false);
   const [articles, setArticles] = useState([]);
   const [category, setCategory] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -71,6 +100,7 @@ function LandingPage() {
             date: new Date(article.date),
           }));
           setArticles(response);
+          toast.success(`Welcome ${username}!`);
         } catch (error) {
           console.error("Error fetching articles:", error);
         }
@@ -137,7 +167,9 @@ function LandingPage() {
 
   return (
     <div>
+      <Toastify />
       <Nav />
+
       <Container>
         <div className=" my-5 py-4">
           <Form onSubmit={handleSearchSubmit}>
@@ -158,7 +190,7 @@ function LandingPage() {
             <Col>
               {suggestedSearchTerms.map((term, index) => (
                 <Chip
-                  className="me-2"
+                  className="me-2 mt-2"
                   key={index}
                   style={{
                     marginTop: "5px",
@@ -288,78 +320,90 @@ function LandingPage() {
               justifyContent: "center",
             }}
           >
-            {currentCards.map((article) => (
-              <Link
-                to={`${article.link}`}
-                key={article.id}
-                style={{ textDecoration: "none" }}
-              >
-                <Tooltip arrow followCursor title={`${article.link}`}>
-                  <Card
-                    style={{
-                      width: "18rem",
-                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                      marginRight: "10px",
-                      marginBottom: "10px",
-                      height: "32rem",
-                    }}
+            {articles.length > 0
+              ? currentCards.map((article) => (
+                  <Link
+                    to={`${article.link}`}
+                    key={article.id}
+                    style={{ textDecoration: "none" }}
                   >
-                    {article.thumbnail && (
-                      <Card.Img
-                        variant="top"
-                        src={article.thumbnail}
-                        alt={article.title}
-                        style={{ height: "200px", objectFit: "cover" }}
-                      />
-                    )}
-                    <Card.Body>
-                      <div
-                        className="mb-2 text-secondary"
-                        style={{ fontSize: "12px" }}
+                    <Tooltip arrow followCursor title={`${article.link}`}>
+                      <Card
+                        style={{
+                          width: "18rem",
+                          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                          marginRight: "10px",
+                          marginBottom: "10px",
+                          height: "32rem",
+                        }}
                       >
-                        <Card.Text className="d-flex justify-content-between align-items-center">
-                          <small>
-                            {new Date(article.date).toLocaleString("en-US", {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })}
-                          </small>
-                          <small className="d-flex align-items-center">
-                            <VisibilityIcon
-                              className="me-2"
-                              sx={{ fontSize: 12 }}
+                        {article.thumbnail && (
+                          <Card.Img
+                            variant="top"
+                            src={article.thumbnail}
+                            alt={article.title}
+                            style={{ height: "200px", objectFit: "cover" }}
+                          />
+                        )}
+                        <Card.ImgOverlay>
+                          <Card.Text className="d-flex justify-content-end">
+                            <Chip
+                              icon={<AccountCircleIcon />}
+                              label={`${article.username}`}
+                              size="small"
                             />
-                            {article.views}
-                          </small>
-                        </Card.Text>
-                      </div>
-
-                      <Card.Title className="mb-4">{article.title}</Card.Title>
-                      <Card.Text>
-                        <figcaption className="blockquote-footer">
-                          {article.description}
-                        </figcaption>
-                      </Card.Text>
-
-                      <Card.Text className="text-secondary">
-                        <Chip
-                          icon={<AccountCircleIcon />}
-                          variant="outlined"
-                          label={`${article.username}`}
-                        />
-                      </Card.Text>
-                    </Card.Body>
-                    <Card.Footer
-                      className="text-secondary"
-                      style={{ fontSize: "12px" }}
-                    >
-                      Category: {article.category.join(", ")}
-                    </Card.Footer>
-                  </Card>
-                </Tooltip>
-              </Link>
-            ))}
+                          </Card.Text>
+                        </Card.ImgOverlay>
+                        <Card.Body>
+                          <div
+                            className="mb-2 text-secondary"
+                            style={{ fontSize: "12px" }}
+                          >
+                            <Card.Text className="d-flex justify-content-between align-items-center">
+                              <small>
+                                {new Date(article.date).toLocaleString(
+                                  "en-US",
+                                  {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                  }
+                                )}
+                              </small>
+                              <small className="d-flex align-items-center">
+                                <VisibilityIcon
+                                  className="me-2"
+                                  sx={{ fontSize: 12 }}
+                                />
+                                {article.views}
+                              </small>
+                            </Card.Text>
+                          </div>
+                          <Card.Title className="mb-4">
+                            <h6>
+                              <b>{article.title}</b>
+                            </h6>
+                          </Card.Title>
+                          <Card.Text>
+                            <figcaption className="blockquote-footer">
+                              {article.description}
+                            </figcaption>
+                          </Card.Text>
+                        </Card.Body>
+                        <Card.Footer
+                          className="text-secondary"
+                          style={{ fontSize: "12px" }}
+                        >
+                          Category: {article.category.join(", ")}
+                        </Card.Footer>
+                      </Card>
+                    </Tooltip>
+                  </Link>
+                ))
+              : // Render placeholders if there are no articles
+                Array.from({ length: cardsPerPage }).map((_, index) => (
+                  <CardPlaceholder key={index} />
+                ))}
           </div>
           <div className="mt-3 d-flex justify-content-center">
             <Pagination
