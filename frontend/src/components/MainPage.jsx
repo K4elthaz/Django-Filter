@@ -42,8 +42,8 @@ const CardPlaceholder = () => {
 };
 
 function LandingPage() {
-  const navigate = useNavigate();
-  const isAuthenticated = localStorage.getItem("access_token") !== null;
+  // const navigate = useNavigate();
+  // const isAuthenticated = localStorage.getItem("access_token") !== null;
   const [articles, setArticles] = useState([]);
   const [category, setCategory] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -114,7 +114,7 @@ function LandingPage() {
       fetchArticles();
       fetchCategory();
     // }
-  }, [isAuthenticated, navigate]);
+  }, []);
 
   useEffect(() => {
     const topFiveArticles = articles
