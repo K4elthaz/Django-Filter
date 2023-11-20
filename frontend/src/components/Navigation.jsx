@@ -7,7 +7,8 @@ import {
   Button,
 } from "react-bootstrap";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
+
 
 function Nav() {
   const username = localStorage.getItem("name");
@@ -35,9 +36,9 @@ function Nav() {
   );
 
   return (
-    <Navbar sticky="top" bg="dark" data-bs-theme="dark">
+    <Navbar sticky="top" bg="danger" data-bs-theme="dark">
       <Container>
-        <Navbar.Brand href="/home">Filtering</Navbar.Brand>
+        <Navbar.Brand href="/">Filtering</Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <OverlayTrigger
@@ -48,7 +49,11 @@ function Nav() {
             overlay={popover}
           >
             <Navbar.Text style={{ cursor: "pointer" }}>
-              {username ? `Signed in as: ${username}` : "Not signed in"}
+              {username ? (
+                `Signed in as: ${username}`
+              ) : (
+                <Link to="/login">Welcome Guest</Link>
+              )}
             </Navbar.Text>
           </OverlayTrigger>
         </Navbar.Collapse>

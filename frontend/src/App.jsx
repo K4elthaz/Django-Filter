@@ -27,12 +27,9 @@ function App() {
       <Router>
         <Toastify />
         <Routes>
-          <Route path="/" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/Register" element={<RegisterPage />} />
-          <Route
-            path="/Home/*"
-            element={<PrivateRoute element={LandingPage} />}
-          />
+          <Route path="/" element={<LandingPage />} />
         </Routes>
       </Router>
     </main>

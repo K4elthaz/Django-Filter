@@ -80,15 +80,15 @@ function LandingPage() {
   };
 
   useEffect(() => {
-    console.log("Checking authentication...");
-    const isAuthenticated = localStorage.getItem("access_token") !== null;
-    console.log("Is authenticated:", isAuthenticated);
+    // console.log("Checking authentication...");
+    // const isAuthenticated = localStorage.getItem("access_token") !== null;
+    // console.log("Is authenticated:", isAuthenticated);
 
-    if (!isAuthenticated) {
-      console.log("User is not authenticated. Redirecting to login.");
+    // if (!isAuthenticated) {
+    //   console.log("User is not authenticated. Redirecting to login.");
 
-      navigate("/");
-    } else {
+    //   navigate("/");
+    // } else {
       const fetchArticles = async () => {
         try {
           const response = await ArticleService.getArticles();
@@ -113,7 +113,7 @@ function LandingPage() {
 
       fetchArticles();
       fetchCategory();
-    }
+    // }
   }, [isAuthenticated, navigate]);
 
   useEffect(() => {

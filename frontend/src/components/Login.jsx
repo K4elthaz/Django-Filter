@@ -34,7 +34,7 @@ function LoginPage() {
       console.log("User ID:", user_id);
       console.log("Name:", name);
 
-      navigate("/home");
+      navigate("/");
     } catch (error) {
       if (error.response && error.response.status === 401) {
         toast.error("Invalid username or password.");
@@ -84,6 +84,12 @@ function LoginPage() {
           <div className="text-muted mt-3">
             <p>
               Don't have an account? <Link to="/Register">Register</Link>
+            </p>
+            <p className="text-center">
+              or
+            </p>
+            <p className="text-center">
+              Visit <Link to="/">Site</Link>
             </p>
           </div>
           {errorMessage && (
