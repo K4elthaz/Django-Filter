@@ -27,7 +27,7 @@ function RegisterPage() {
       console.log("Registration successful");
       toast.success(`Registration successful. Welcome, ${username}!`);
 
-      navigate("/home");
+      navigate("/");
     } catch (error) {
       toast.error("Registration failed. Please try again.");
       console.error("Registration error:", error);

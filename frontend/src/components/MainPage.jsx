@@ -55,7 +55,7 @@ function LandingPage() {
   const [isDateSort, setIsDateSort] = useState(false);
   const [viewedArticles, setViewedArticles] = useState([]);
 
-  const cardsPerPage = 12;
+  const cardsPerPage = 36;
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
   const filteredArticles = articles
