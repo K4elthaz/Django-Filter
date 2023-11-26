@@ -7,8 +7,8 @@ import {
   Button,
 } from "react-bootstrap";
 import { toast } from "react-toastify";
-import { useNavigate,Link } from "react-router-dom";
-
+import { useNavigate, Link } from "react-router-dom";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
 function Nav() {
   const username = localStorage.getItem("name");
@@ -38,7 +38,10 @@ function Nav() {
   return (
     <Navbar sticky="top" bg="danger" data-bs-theme="dark">
       <Container>
-        <Navbar.Brand href="/">Filtering</Navbar.Brand>
+        <Navbar.Brand className="d-flex align-items-center" href="/">
+          <FilterAltIcon />
+          Filtering
+        </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <OverlayTrigger
