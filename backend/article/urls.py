@@ -8,6 +8,10 @@ router = DefaultRouter()
 router.register(r'articles', ArticleViewSet)
 router.register(r'categories', CategoryViewSet)
 
+# Register the get_average_rating
+router.register(r'articles', ArticleViewSet, basename='article')
+
+
 urlpatterns = [
     path('api/', include(router.urls)),
     path('login/', UserLoginView.as_view(), name='user-login'),

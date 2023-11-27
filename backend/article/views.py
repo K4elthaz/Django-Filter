@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import generics, viewsets
-from .models import Article, Category
+from .models import Article, Category, Rating
 from .serializers import ArticleSerializer, CategorySerializer, UserSerializer
 
 class ArticleViewSet(viewsets.ModelViewSet):
@@ -22,7 +22,39 @@ class ArticleViewSet(viewsets.ModelViewSet):
         article.save()
         serializer = self.get_serializer(article)
         return Response(serializer.data)
+    
+    @action(detail=True, methods=['post'])
+    def add_rating(self, request, pk=None):
+        article = self.get_object()
 
+        rating_value = request.data.get('rating')
+
+        if not rating_value:
+            return Response({'error': 'Rating value is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            rating_value = int(rating_value)
+        except ValueError:
+            return Response({'error': 'Invalid rating value. Must be an integer.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not (0 <= rating_value <= 5):
+            return Response({'error': 'Rating must be between 0 and 5'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create a new Rating instance and associate it with the current article
+        Rating.objects.create(article=article, value=rating_value)
+
+        serializer = self.get_serializer(article)
+        return Response(serializer.data)
+    
+    @action(detail=True, methods=['get'])
+    def get_average_rating(self, request, pk=None):
+        article = self.get_object()
+
+        # Calculate the overall average rating
+        overall_average_rating = article.calculate_average_rating()
+
+        return Response({'average_rating': overall_average_rating})
+    
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -88,8 +120,3 @@ class UserLogoutView(APIView):
         else:
             print("Refresh token not provided")
             return Response({'error': 'Refresh token not provided'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-

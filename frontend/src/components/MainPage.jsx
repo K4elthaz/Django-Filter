@@ -15,6 +15,7 @@ import Pagination from "./Pagination";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import Rating from "@mui/material/Rating";
 
 const CardPlaceholder = () => {
   return (
@@ -54,6 +55,7 @@ function LandingPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isDateSort, setIsDateSort] = useState(false);
   const [viewedArticles, setViewedArticles] = useState([]);
+  const [userRatings, setUserRatings] = useState({});
 
   const cardsPerPage = 36;
   const indexOfLastCard = currentPage * cardsPerPage;
@@ -88,33 +90,96 @@ function LandingPage() {
     //   console.log("User is not authenticated. Redirecting to login.");
 
     //   navigate("/");
-    // } else {
-      const fetchArticles = async () => {
-        try {
-          const response = await ArticleService.getArticles();
-          const articlesWithDate = response.map((article) => ({
-            ...article,
-            date: new Date(article.date),
-          }));
-          setArticles(articlesWithDate);
-        } catch (error) {
-          console.error("Error fetching articles:", error);
-        }
-      };
+    const fetchArticles = async () => {
+      try {
+        const response = await ArticleService.getArticles();
+        const articlesWithDate = response.map((article) => ({
+          ...article,
+          date: new Date(article.date),
+          averageRating: 0,
+        }));
+        setArticles(articlesWithDate);
 
-      const fetchCategory = async () => {
-        try {
-          const response = await CategoryService.getCategory();
-          setCategory(response);
-        } catch (error) {
-          console.error("Error fetching articles:", error);
-        }
-      };
+        const storedVotes = JSON.parse(localStorage.getItem("userVotes")) || {};
+        setUserRatings(storedVotes);
 
-      fetchArticles();
-      fetchCategory();
+        articlesWithDate.forEach(async (article) => {
+          try {
+            const averageRatingResponse = await ArticleService.getAverageRating(
+              article.id
+            );
+            setArticles((prevArticles) =>
+              prevArticles.map((prevArticle) =>
+                prevArticle.id === article.id
+                  ? {
+                      ...prevArticle,
+                      averageRating: averageRatingResponse.average_rating,
+                    }
+                  : prevArticle
+              )
+            );
+          } catch (error) {
+            console.error(
+              `Error fetching average rating for article ${article.id}:`,
+              error
+            );
+          }
+        });
+      } catch (error) {
+        console.error("Error fetching articles:", error);
+      }
+    };
+
+    const fetchCategory = async () => {
+      try {
+        const response = await CategoryService.getCategory();
+        setCategory(response);
+      } catch (error) {
+        console.error("Error fetching articles:", error);
+      }
+    };
+
+    fetchArticles();
+    fetchCategory();
     // }
   }, []);
+
+  const handleRatingChange = async (articleId, newRating) => {
+    const updatedVotes = {
+      ...(JSON.parse(localStorage.getItem("userVotes")) || {}),
+      [articleId]: newRating,
+    };
+
+    localStorage.setItem("userVotes", JSON.stringify(updatedVotes));
+
+    setUserRatings((prevUserRatings) => ({
+      ...prevUserRatings,
+      [articleId]: newRating,
+    }));
+
+    try {
+      await ArticleService.addRating(articleId, newRating);
+
+      const averageRatingResponse = await ArticleService.getAverageRating(
+        articleId
+      );
+
+      const updatedArticles = articles.map((article) =>
+        article.id === articleId
+          ? {
+              ...article,
+              averageRating: averageRatingResponse.average_rating,
+            }
+          : article
+      );
+
+      setArticles(updatedArticles);
+
+      console.log(`Rating for article ${articleId} added successfully.`);
+    } catch (error) {
+      console.error("Error adding or fetching rating:", error);
+    }
+  };
 
   useEffect(() => {
     const topFiveArticles = articles
@@ -364,7 +429,26 @@ function LandingPage() {
                           />
                         )}
                         <Card.ImgOverlay>
-                          <Card.Text className="d-flex justify-content-end">
+                          <Card.Text className="d-flex justify-content-between align-items-center">
+                            <Paper
+                              className="d-flex align-items-center"
+                              variant="elevation"
+                              style={{
+                                backgroundColor: "#00000000",
+                                backdropFilter: "blur(20px)",
+                                padding: "2px",
+                              }}
+                            >
+                              <Rating
+                                name={`user-rating-${article.id}`}
+                                value={article.averageRating || 0} // Use averageRating instead of userRatings
+                                precision={0.5}
+                                onChange={(event, newRating) =>
+                                  handleRatingChange(article.id, newRating)
+                                }
+                                size="small"
+                              />
+                            </Paper>
                             <Chip
                               icon={<AccountCircleIcon />}
                               label={`${article.username}`}
