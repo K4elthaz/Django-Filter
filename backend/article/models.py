@@ -33,3 +33,16 @@ class Article(models.Model):
             return round(total_ratings / num_ratings, 2)
         else:
             return 0
+             
+class Blog(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    date_created = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        # Format the date as desired (e.g., Month Day, Year)
+        formatted_date = self.date_created.strftime('%B %d, %Y')
+        return f"{self.title} - {formatted_date}"
+    
+        

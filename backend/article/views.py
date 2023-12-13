@@ -8,8 +8,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import generics, viewsets
-from .models import Article, Category, Rating
-from .serializers import ArticleSerializer, CategorySerializer, UserSerializer
+from .models import Article, Category, Rating, Blog
+from .serializers import ArticleSerializer, CategorySerializer, UserSerializer, BlogSerializer
 
 class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
@@ -120,3 +120,15 @@ class UserLogoutView(APIView):
         else:
             print("Refresh token not provided")
             return Response({'error': 'Refresh token not provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+class BlogViewSet(viewsets.ModelViewSet):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+    
+    def create(self, request):
+        serializer = BlogSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(author=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    

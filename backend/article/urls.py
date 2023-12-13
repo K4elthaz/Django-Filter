@@ -1,13 +1,13 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import ArticleViewSet, CategoryViewSet,UserLoginView,UserLogoutView,UserListCreateView,UserRetrieveUpdateView,protected_view
+from .views import ArticleViewSet, CategoryViewSet,UserLoginView,UserLogoutView,UserListCreateView,UserRetrieveUpdateView,protected_view, BlogViewSet
 from django.conf import settings
 from django.conf.urls.static import static
 
 router = DefaultRouter()
 router.register(r'articles', ArticleViewSet)
 router.register(r'categories', CategoryViewSet)
-
+router.register(r'blogs', BlogViewSet)
 # Register the get_average_rating
 router.register(r'articles', ArticleViewSet, basename='article')
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Article, Category
+from .models import Article, Category, Blog  
 from django.contrib.auth.models import User
 from django.core import validators
 
@@ -27,6 +27,13 @@ class ArticleSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
+        fields = '__all__'
+
+class BlogSerializer(serializers.ModelSerializer):  # Serializer for the Blog model
+    author = serializers.ReadOnlyField(source='author.username')  # Use ReadOnlyField to get the author's username
+
+    class Meta:
+        model = Blog
         fields = '__all__'
         
 class UserSerializer(serializers.ModelSerializer):

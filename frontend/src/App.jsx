@@ -12,6 +12,9 @@ import RegisterPage from "./components/Register";
 import LandingPage from "./components/MainPage";
 import PrivateRoute from "./components/PrivateRoute";
 import Toastify from "./components/Toastify";
+import Blog from "./components/BlogPost";
+import About from "./components/AboutUs";
+import Contact from "./components/ContactUs";
 
 function App() {
   return (
@@ -29,7 +32,10 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/Register" element={<RegisterPage />} />
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<Blog/>} />
+          <Route path="/home" element={<LandingPage />} />
+          <Route path="/about-us" element={<About/>} />
+          <Route path="/contact-us" element={<Contact/>} />
         </Routes>
       </Router>
     </main>

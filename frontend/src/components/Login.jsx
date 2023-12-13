@@ -33,8 +33,9 @@ function LoginPage() {
       toast.success(`Welcome ${name}!`);
       console.log("User ID:", user_id);
       console.log("Name:", name);
+      console.log("Access Token:", accessToken);
 
-      navigate("/");
+      navigate("/home");
     } catch (error) {
       if (error.response && error.response.status === 401) {
         toast.error("Invalid username or password.");

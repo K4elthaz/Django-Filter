@@ -5,12 +5,13 @@ import {
   OverlayTrigger,
   Popover,
   Button,
+  Nav,
 } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
-function Nav() {
+function MyNav() {
   const username = localStorage.getItem("name");
   const [showPopover, setShowPopover] = useState(false);
   const navigate = useNavigate();
@@ -36,12 +37,17 @@ function Nav() {
   );
 
   return (
-    <Navbar sticky="top" bg="danger" data-bs-theme="dark">
+    <Navbar sticky="top" bg="danger" variant="dark">
       <Container>
-        <Navbar.Brand className="d-flex align-items-center" href="/">
+        <Navbar.Brand className="d-flex align-items-center" href="/home">
           <FilterAltIcon />
           Filtering
         </Navbar.Brand>
+        <Nav>
+            <Nav.Link href="/about-us">About Us</Nav.Link>
+            <Nav.Link href="/contact-us">Contact Us</Nav.Link>
+            <Nav.Link href="/">Blog</Nav.Link>
+          </Nav>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <OverlayTrigger
@@ -65,4 +71,4 @@ function Nav() {
   );
 }
 
-export default Nav;
+export default MyNav;

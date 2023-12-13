@@ -13,6 +13,15 @@ const ApiService = {
       throw error;
     }
   },
+  
+  getUserDetails: async (userId) => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/api/users/${userId}/`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 
   register: async (username, password, email) => {
     try {
